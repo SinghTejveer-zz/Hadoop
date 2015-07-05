@@ -7,28 +7,35 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 public class JoinMapper2 extends Mapper<Object, Text, Text, Text> {
 
-  private final int StateIndex = 3;
+  private final int TitleIndex = 3;
+  private final int TrackIdIndex = 2;
+  private final int ArtistIdIndex = 0;
+  private final int ExpectedSplitLength = 4;
+
   String seek = "night";
   String seperator = "<SEP>";
 
   public void map(Object key, Text line, Context context) throws IOException,
       InterruptedException {
 
+    if (line == null) {
+      return;
+    }
+
     String[] splits = line.toString().split(seperator);
 
-    if (splits.length == StateIndex + 1) {
+    if (splits.length == ExpectedSplitLength) {
 
-      // Boolean containsSearchword =
-      // splits[StateIndex].toLowerCase().contains(seek);
+      // Search for the keyword
+      Boolean containsSearchword =
+          splits[TitleIndex].toLowerCase().contains(seek);
 
-      String Artid1 = splits[StateIndex - 3];
-      // String Artid2 = splits[StateIndex - 2];
-      String Trackid = splits[StateIndex - 1];
-      // String Artistname = splits[StateIndex];
+      String ArtistId = splits[ArtistIdIndex];
+      String TrackId = splits[TrackIdIndex];
 
-      // Filter
-      // if (containsSearchword)
-      context.write(new Text(Trackid), new Text(Artid1));
+      // Map if keyword found
+      if (containsSearchword)
+        context.write(new Text(TrackId), new Text(ArtistId));
 
     }
   }

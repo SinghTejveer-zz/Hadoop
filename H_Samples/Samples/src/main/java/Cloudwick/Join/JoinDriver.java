@@ -29,23 +29,22 @@ public class JoinDriver {
     job.setJarByClass(JoinDriver.class);
 
     // Setup MapReduce
-    // job.setMapperClass(Mapper1.class);
-    // job.setMapperClass(Mapper2.class);
+
+    // Input for mapper1
+    MultipleInputs.addInputPath(job, inputPath1, TextInputFormat.class,
+        JoinMapper1.class);
+
+    // Input for mapper2
+    MultipleInputs.addInputPath(job, inputPath2, TextInputFormat.class,
+        JoinMapper2.class);
+
+    // Reducer
     job.setReducerClass(JoinReducer.class);
     job.setNumReduceTasks(1);
 
     // Specify key / value
     job.setOutputKeyClass(Text.class);
     job.setOutputValueClass(Text.class);
-
-    // Input
-    MultipleInputs.addInputPath(job, inputPath1, TextInputFormat.class,
-        JoinMapper1.class);
-    MultipleInputs.addInputPath(job, inputPath2, TextInputFormat.class,
-        JoinMapper2.class);
-
-    // FileInputFormat.addInputPath(job, inputPath);
-    // job.setInputFormatClass(TextInputFormat.class);
 
     // Output
     FileOutputFormat.setOutputPath(job, outputDir);

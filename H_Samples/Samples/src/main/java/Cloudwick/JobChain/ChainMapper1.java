@@ -1,3 +1,8 @@
+/*
+MR job for Filter the records for the songs with title containing "night"
+Then it sends output of first mappaer1 as an input to the other mapper2.
+ */
+
 package Cloudwick.JobChain;
 
 import java.io.IOException;
@@ -7,30 +12,40 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 public class ChainMapper1 extends Mapper<Object, Text, Text, Text> {
 
-  private final int StateIndex = 3;
+  private final int TrackIndex = 0;
+  private final int ArtistIndex = 2;
+  private final int TitleIndex = 3;
+  private final int ExpectedSplitsLength = 4;
+
   String seek = "night";
   String seperator = "<SEP>";
 
   public void map(Object key, Text line, Context context) throws IOException,
       InterruptedException {
 
-    String[] splits = line.toString().split(seperator);
+    if (line == null) {
+      return;
+    }
 
-    if (splits.length == StateIndex + 1) {
+    String[] recordSplits = line.toString().split(seperator);
 
+    // Checking if the length of recordSplits is exactly what we are finding
+    if (recordSplits.length == ExpectedSplitsLength) {
+
+      // Searching for the keyword
       Boolean containsSearchword =
-          splits[StateIndex].toLowerCase().contains(seek);
+          recordSplits[TitleIndex].toLowerCase().contains(seek);
 
-      String Trackid = splits[StateIndex - 3];
-      String Songid = splits[StateIndex - 2];
-      String Artistname = splits[StateIndex - 1];
-      String Title = splits[StateIndex];
+      String Trackid = recordSplits[TrackIndex];
+      String Artistname = recordSplits[ArtistIndex];
+      String Title = recordSplits[TitleIndex];
 
-      // Filter
+      // Map if keyword found
       if (containsSearchword)
-        context.write(new Text(""), new Text(Trackid + "\t" + Artistname + "\t"
-            + Title));
-
+ {
+        context.write(new Text(" "), new Text(Trackid + "\t" + Artistname
+            + "\t" + Title));
+      }
     }
   }
 }

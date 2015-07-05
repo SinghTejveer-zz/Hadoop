@@ -1,4 +1,4 @@
-package Cloudwick.Samples;
+package Cloudwick.FliterCA;
 
 import java.io.IOException;
 
@@ -13,7 +13,7 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
-public class WordCount {
+public class FilterDriver {
 
   public static void main(String[] args) throws IOException,
       InterruptedException, ClassNotFoundException {
@@ -25,12 +25,11 @@ public class WordCount {
     Configuration conf = new Configuration(true);
 
     // Create job
-    Job job = new Job(conf, "WordCount");
-    job.setJarByClass(WordCountMapper.class);
+    Job job = new Job(conf, "Filter CA");
+    job.setJarByClass(FilterDriver.class);
 
     // Setup MapReduce
-    job.setMapperClass(WordCountMapper.class);
-    job.setReducerClass(WordCountReducer.class);
+    job.setMapperClass(FilterMapper.class);
     job.setNumReduceTasks(1);
 
     // Specify key / value

@@ -1,3 +1,9 @@
+/*
+Takes the output from the mapper1 as its input and checks if it contains keyword 
+"black".
+The output will be only those records contain black & night.
+ */
+
 package Cloudwick.JobChain;
 
 import java.io.IOException;
@@ -7,27 +13,36 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 public class ChainMapper2 extends Mapper<Object, Text, Text, Text> {
 
-  private final int StateIndex = 3;
+  private final int TitleIndex = 3;
+  private final int TrackIndex = 2;
+  private final int ArtistIndex = 1;
+
   String seek = "black";
-  String seperator = "\t";
+  String outputSep = "\t";
 
   public void map(Object key, Text line, Context context) throws IOException,
       InterruptedException {
 
-    String[] splits = line.toString().split(seperator);
+    if (line == null) {
+      return;
+    }
 
-    if (splits.length == StateIndex + 1) {
+    String[] splits = line.toString().split(outputSep);
 
-      String Trackid = splits[StateIndex - 2];
-      String Artistname = splits[StateIndex - 1];
-      String Title = splits[StateIndex];
+    // Checking if the length of recordSplits is exactly what we are finding
+    if (splits.length == TitleIndex + 1) {
 
+      String Trackid = splits[TrackIndex];
+      String Artistname = splits[ArtistIndex];
+      String Title = splits[TitleIndex];
+
+      // Searching for the keyword
       Boolean containsSearchword = Title.toLowerCase().contains(seek);
 
-      // Filter
+      // Map if keyword found
       if (containsSearchword)
-        context.write(new Text(" "), new Text(Trackid + "\t" + Artistname
-            + "\t" + Title));
+        context.write(new Text(" "), new Text(Trackid + outputSep + Artistname
+            + outputSep + Title));
 
     }
   }

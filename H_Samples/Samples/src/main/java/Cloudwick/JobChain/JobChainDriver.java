@@ -34,7 +34,6 @@ public class JobChainDriver {
     // Setup MapReduce
     job.setMapperClass(ChainMapper1.class);
     job1.setMapperClass(ChainMapper2.class);
-    // job.setReducerClass(WordCountReducer.class);
     job.setNumReduceTasks(1);
 
     // Specify key / value
@@ -65,9 +64,12 @@ public class JobChainDriver {
 
     // Execute job
     int code = job.waitForCompletion(true) ? 0 : 1;
-    int code1 = job1.waitForCompletion(true) ? 0 : 1;
-    System.exit(code1);
 
+    // if first job fails, just exit immediately with error code 1;
+    if (code != 0)
+      System.exit(code);
+
+    code = job1.waitForCompletion(true) ? 0 : 2;
+    System.exit(code);
   }
-
 }
