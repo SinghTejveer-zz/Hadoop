@@ -12,7 +12,7 @@ public class JoinMapper1 extends Mapper<Object, Text, Text, Text> {
   private final int TrackIdIndex = 0;
   private final int ExpectedSplitIndex = 4;
 
-  String seek = "night";
+  // String seek = "night";
   String seperator = "<SEP>";
   String outSeperator = "\t";
 
@@ -28,15 +28,15 @@ public class JoinMapper1 extends Mapper<Object, Text, Text, Text> {
     if (splits.length == ExpectedSplitIndex) {
 
       // Search for the keyword
-      Boolean containsSearchword =
-          splits[TitleIndex].toLowerCase().contains(seek);
+      // Boolean containsSearchword =
+      // splits[TitleIndex].toLowerCase().contains(seek);
 
       String Trackid = splits[TrackIdIndex];
       String Artistname = splits[ArtistIndex];
       String Title = splits[TitleIndex];
 
       // Map if keyword found
-      if (containsSearchword)
+      // if (containsSearchword)
         context.write(new Text(Trackid), new Text(Artistname + outSeperator
             + Title));
 
