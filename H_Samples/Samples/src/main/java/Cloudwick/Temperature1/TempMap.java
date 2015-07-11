@@ -14,7 +14,7 @@ public class TempMap extends Mapper<LongWritable, Text, Text, DoubleWritable> {
   private final int TempIndex = 2;
   private final int YearIndex = 0;
 
-  String SPLIT_REGEX = " +";
+  String SPLIT_SEP = " +";
 
   public void map(LongWritable key, Text value, Context context)
       throws IOException, InterruptedException {
@@ -28,7 +28,7 @@ public class TempMap extends Mapper<LongWritable, Text, Text, DoubleWritable> {
       return;
     }
 
-    String[] recordSplits = Line.trim().split(SPLIT_REGEX);
+    String[] recordSplits = Line.trim().split(SPLIT_SEP);
 
     if (recordSplits.length == ExpectedColumnCount) {
 
