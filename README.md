@@ -17,4 +17,7 @@ MR Job to perform word count.
 #Temperature
 MR Job to filter the maximum temperature for the year.
 
+#UniqueVisitor
+MR Job to filter the unique visitor to the website.
+
 
