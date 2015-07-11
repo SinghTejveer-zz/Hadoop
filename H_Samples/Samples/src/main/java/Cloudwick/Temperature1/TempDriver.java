@@ -1,15 +1,14 @@
 /* 
  * MR Job to find the Maximum temperature for the Year.  
  */
-
-package Cloudwick.Temperature;
+package Cloudwick.Temperature1;
 
 import java.io.IOException;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -22,8 +21,6 @@ public class TempDriver {
   public static void main(String[] args) throws IOException,
       InterruptedException, ClassNotFoundException {
     if (args.length != 2) {
-
-      // TODO start using log4j instead of System.*.println
       System.err.println("Usage : MaxTemperature<input path> <output path>");
       System.exit(-1);
 
@@ -36,7 +33,7 @@ public class TempDriver {
     Configuration conf = new Configuration(true);
 
     // Create job
-    Job job = new Job(conf, "MRjob");
+    Job job = new Job(conf, "MRjob_Temp");
     job.setJarByClass(TempDriver.class);
 
     // Setup MapReduce
@@ -46,7 +43,7 @@ public class TempDriver {
 
     // Specify key / value
     job.setOutputKeyClass(Text.class);
-    job.setOutputValueClass(IntWritable.class);
+    job.setOutputValueClass(DoubleWritable.class);
 
     // Input
     FileInputFormat.addInputPath(job, inputPath);
