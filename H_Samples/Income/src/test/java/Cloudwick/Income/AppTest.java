@@ -1,4 +1,4 @@
-package Cloudwick.Samples;
+package Cloudwick.Income;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
