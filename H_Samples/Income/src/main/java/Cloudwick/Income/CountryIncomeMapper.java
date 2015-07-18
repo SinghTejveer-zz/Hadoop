@@ -1,20 +1,16 @@
-/*
-MR job to Filter the records for the country name and its adjusted net national income per capita (current US$) for the year 2010.
-O/P : Output record with country name and its adjusted net national income per capita (current US$) for the year 2010. 
-Note: The input file should be in foo.*format*.gz format.
- */
 package Cloudwick.Income;
 
 import java.io.IOException;
 
-import org.apache.hadoop.io.DoubleWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.log4j.Logger;
 
 import Cloudwick.Income.IncomeDriver.COUNTERS;
 
-public class IncomeMapper extends Mapper<Object, Text, Text, DoubleWritable> {
+public class CountryIncomeMapper extends
+    Mapper<Object, Text, CompositeKeyWritable, NullWritable> {
 
   private Logger logger = Logger.getLogger("FilterMapper");
 
@@ -45,7 +41,12 @@ public class IncomeMapper extends Mapper<Object, Text, Text, DoubleWritable> {
 
           double income = Double.parseDouble(recordSplits[incomeIndex]);
 
-          context.write(new Text(countryName), new DoubleWritable(income));
+          // Setting the values for composite Key Writable
+          CompositeKeyWritable k = new CompositeKeyWritable();
+          k.setCountryName(countryName);
+          k.setIncome(income);
+
+          context.write(k, NullWritable.get());
 
         } catch (NumberFormatException nfe) {
 

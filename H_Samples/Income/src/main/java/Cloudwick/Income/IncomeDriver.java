@@ -8,9 +8,8 @@ import java.net.URI;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.io.compress.CompressionCodecFactory;
 import org.apache.hadoop.mapreduce.Counters;
@@ -24,7 +23,7 @@ public class IncomeDriver {
 
   public enum COUNTERS {
 
-    NULL_OR_EMPTY, MISSING_FIELDS_RECORD_COUNT
+    NULL_OR_EMPTY, MISSING_FIELDS_RECORD_COUNT, RECORDS;
   }
 
   public static void main(String[] args) throws IOException,
@@ -38,10 +37,10 @@ public class IncomeDriver {
 
     // Create job
     @SuppressWarnings("deprecation")
-    Job job = new Job(conf, "Country_Income");
+    Job job = new Job(conf, "CountryIncomeConf");
     job.setJarByClass(IncomeDriver.class);
 
-    // Decompression .gz file Ex. foo.csv.gz to foo.csv
+    // Decompressing .gz file Ex. foo.csv.gz to foo.csv
 
     String uri = args[0];
     FileSystem fs = FileSystem.get(URI.create(uri), conf);
@@ -66,12 +65,17 @@ public class IncomeDriver {
     }
 
     // Setup MapReduce
-    job.setMapperClass(IncomeMapper.class);
+    job.setMapperClass(CountryIncomeMapper.class);
+    job.setPartitionerClass(SecondarySortBasicPartitioner.class);
+
+    job.setGroupingComparatorClass(SecondarySortBasicGroupingComparator.class);
+    job.setSortComparatorClass(SecondarySortBasicCompKeySortComparator.class);
+    job.setReducerClass(CountryIncomeReducer.class);
     job.setNumReduceTasks(1);
 
     // Specify key / value
-    job.setOutputKeyClass(Text.class);
-    job.setOutputValueClass(DoubleWritable.class);
+    job.setOutputKeyClass(CompositeKeyWritable.class);
+    job.setOutputValueClass(NullWritable.class);
 
     // Input
     // FileInputFormat.addInputPath(job, inputPath);
@@ -93,6 +97,7 @@ public class IncomeDriver {
     // Counter finding and displaying
     Counters counters = job.getCounters();
 
+    // Displaying counters
     System.out.printf("Missing Fields: %d, Error Count: %d\n", counters
         .findCounter(COUNTERS.MISSING_FIELDS_RECORD_COUNT).getValue(), counters
         .findCounter(COUNTERS.NULL_OR_EMPTY).getValue());
