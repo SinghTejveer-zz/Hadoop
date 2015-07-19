@@ -66,15 +66,15 @@ public class IncomeDriver {
 
     // Setup MapReduce
     job.setMapperClass(CountryIncomeMapper.class);
-    job.setPartitionerClass(SecondarySortBasicPartitioner.class);
+    job.setPartitionerClass(CountryPartitioner.class);
 
     job.setGroupingComparatorClass(SecondarySortBasicGroupingComparator.class);
-    job.setSortComparatorClass(SecondarySortBasicCompKeySortComparator.class);
+    job.setSortComparatorClass(BasicCompKeySortComparator.class);
     job.setReducerClass(CountryIncomeReducer.class);
     job.setNumReduceTasks(1);
 
     // Specify key / value
-    job.setOutputKeyClass(CompositeKeyWritable.class);
+    job.setOutputKeyClass(CompositeKeyWrite.class);
     job.setOutputValueClass(NullWritable.class);
 
     // Input

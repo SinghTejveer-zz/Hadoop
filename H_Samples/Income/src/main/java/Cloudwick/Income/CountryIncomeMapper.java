@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 import Cloudwick.Income.IncomeDriver.COUNTERS;
 
 public class CountryIncomeMapper extends
-    Mapper<Object, Text, CompositeKeyWritable, NullWritable> {
+    Mapper<Object, Text, CompositeKeyWrite, NullWritable> {
 
   private Logger logger = Logger.getLogger("FilterMapper");
 
@@ -30,19 +30,19 @@ public class CountryIncomeMapper extends
     }
     if (line.toString().contains(
         "Adjusted net national income per capita (current US$)")) {
-      String[] recordSplits = line.toString().split(seperator);
+      String[] recordSplits = line.toString().trim().split(seperator);
 
       logger.info("The data has been splitted.");
 
       if (recordSplits.length == lenIndex) {
 
-        String countryName = recordSplits[countryIndex];
+        String countryName = recordSplits[countryIndex].trim();
         try {
 
           double income = Double.parseDouble(recordSplits[incomeIndex]);
 
           // Setting the values for composite Key Writable
-          CompositeKeyWritable k = new CompositeKeyWritable();
+          CompositeKeyWrite k = new CompositeKeyWrite();
           k.setCountryName(countryName);
           k.setIncome(income);
 

@@ -4,10 +4,10 @@ import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableComparator;
 import org.apache.log4j.Logger;
 
-public class SecondarySortBasicCompKeySortComparator extends WritableComparator {
+public class BasicCompKeySortComparator extends WritableComparator {
 
-  protected SecondarySortBasicCompKeySortComparator() {
-    super(CompositeKeyWritable.class, true);
+  protected BasicCompKeySortComparator() {
+    super(CompositeKeyWrite.class, true);
   }
 
   @SuppressWarnings("unused")
@@ -16,8 +16,8 @@ public class SecondarySortBasicCompKeySortComparator extends WritableComparator 
   @SuppressWarnings("rawtypes")
   @Override
   public int compare(WritableComparable w1, WritableComparable w2) {
-    CompositeKeyWritable key1 = (CompositeKeyWritable) w1;
-    CompositeKeyWritable key2 = (CompositeKeyWritable) w2;
+    CompositeKeyWrite key1 = (CompositeKeyWrite) w1;
+    CompositeKeyWrite key2 = (CompositeKeyWrite) w2;
 
     return -key1.getIncome().compareTo(key2.getIncome());
 

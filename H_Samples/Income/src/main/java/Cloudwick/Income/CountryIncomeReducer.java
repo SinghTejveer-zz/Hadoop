@@ -10,18 +10,18 @@ import Cloudwick.Income.IncomeDriver.COUNTERS;
 
 public class CountryIncomeReducer
     extends
-    Reducer<CompositeKeyWritable, NullWritable, CompositeKeyWritable, NullWritable> {
+    Reducer<CompositeKeyWrite, NullWritable, CompositeKeyWrite, NullWritable> {
 
   @SuppressWarnings("unused")
   private Logger logger = Logger.getLogger("FilterMapper");
 
   @Override
-  public void reduce(CompositeKeyWritable key, Iterable<NullWritable> values,
+  public void reduce(CompositeKeyWrite key, Iterable<NullWritable> values,
       Context context) throws IOException, InterruptedException {
 
     long count = context.getCounter(COUNTERS.RECORDS).getValue();
 
-    if (count == 10) {
+    if (count == 20) {
       return; // Displaying only top 10 and lowest 10 countries
     }
 

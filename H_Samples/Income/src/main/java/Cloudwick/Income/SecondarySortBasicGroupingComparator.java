@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 
 public class SecondarySortBasicGroupingComparator extends WritableComparator {
   protected SecondarySortBasicGroupingComparator() {
-    super(CompositeKeyWritable.class, true);
+    super(CompositeKeyWrite.class, true);
   }
 
   @SuppressWarnings("unused")
@@ -15,8 +15,8 @@ public class SecondarySortBasicGroupingComparator extends WritableComparator {
   @SuppressWarnings("rawtypes")
   @Override
   public int compare(WritableComparable w1, WritableComparable w2) {
-    CompositeKeyWritable key1 = (CompositeKeyWritable) w1;
-    CompositeKeyWritable key2 = (CompositeKeyWritable) w2;
+    CompositeKeyWrite key1 = (CompositeKeyWrite) w1;
+    CompositeKeyWrite key2 = (CompositeKeyWrite) w2;
 
     return key1.getIncome().compareTo(key2.getIncome());
   }
